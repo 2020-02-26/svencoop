@@ -41,7 +41,9 @@ HookReturnCode onChat(
 	
 	pParams.ShouldHide = true;
 	
-	if (cArgs.Arg(1) == "activate")
+	if (cArgs.Arg(1) == "info")
+		MSCAP::Skills::onBlinkInfo(pParams.GetPlayer());
+	else if (cArgs.Arg(1) == "activate")
 		MSCAP::Skills::onBlinkActivate(pParams.GetPlayer());
 	else
 		g_PlayerFuncs.SayText(pParams.GetPlayer(), "Unknown blink action \"" + cArgs.Arg(1) + "\".\n");
@@ -51,6 +53,16 @@ HookReturnCode onChat(
 
 namespace MSCAP {
 	namespace Skills {
+		void onBlinkInfo(CBasePlayer@ pPlayer) {
+			CustomKeyvalues@ pCustom = pPlayer.GetCustomKeyvalues();
+			
+			float flCooldown = pCustom.GetKeyvalue("$f_mscap_blink_cooldown").GetFloat();
+			float flDistance = pCustom.GetKeyvalue("$f_mscap_blink_distance").GetFloat();
+			
+			g_PlayerFuncs.SayText(pPlayer, "Blink teleport cooldown: "         + formatFloat(flCooldown,      "", 0, 1) + "s.\n");
+			g_PlayerFuncs.SayText(pPlayer, "Blink teleport maximum distance: " + formatFloat(flDistance,      "", 0, 1) + " units.\n");
+		}
+		
 		void onBlinkActivate(CBasePlayer@ pPlayer) {
 			CustomKeyvalues@ pCustom = pPlayer.GetCustomKeyvalues();
 			
